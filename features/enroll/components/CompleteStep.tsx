@@ -37,7 +37,7 @@ export default function CompleteStep({
   const [agreed,setAgreed]=useState(false);
   const [loading,setLoading]=useState(false);
   const [error,setError]=useState("");
-  const [result,setResult]=useState<any>(null);
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   const submit=async()=>{
 
@@ -77,11 +77,25 @@ export default function CompleteStep({
         body:JSON.stringify(payload)
       });
 
-      if(!res.ok) throw new Error("신청 실패");
+      const data = await res.json();
 
-      const data=await res.json();
+      if (!res.ok) {
+        switch (data.code) {
+          case "INVALID_INPUT":
+            setErrors?.(data.details); // 필드 에러 전달
+            break;
 
-      //setResult(data);
+          case "COURSE_FULL":
+          case "DUPLICATE_ENROLLMENT":
+            setError(data.message); // 전체 에러 메시지
+            break;
+
+          default:
+            setError("알 수 없는 오류가 발생했습니다");
+        }
+
+        return;
+      }
 
       onSuccess(data);
 

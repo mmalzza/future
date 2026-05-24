@@ -39,7 +39,7 @@ export const mockCourses:CourseListResponse={
       category:"디자인",
       price:40000,
       maxCapacity:400,
-      currentEnrollment:60,
+      currentEnrollment:400,
       startDate:"2026-07-01",
       endDate:"무제한",
       instructor:"김영숙",
