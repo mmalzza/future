@@ -1,7 +1,5 @@
 "use client";
 
-import {useState} from "react";
-
 type Props={
   courseId:string;
   title:string;
@@ -30,6 +28,9 @@ export default function GroupStep({
 
     if(!/^01[016789]\d{7,8}$/.test(form.phone))
       return alert("전화번호 형식 오류");
+
+    if(form.motivation.length>300)
+      return alert("수강동기 300자 이하");
 
     if(!form.groupName)
       return alert("단체명 필수");
@@ -114,7 +115,7 @@ export default function GroupStep({
         />
 
         <textarea
-          placeholder="수강 동기 (선택/500자 이내)"
+          placeholder="수강 동기 (선택/300자 이내)"
           value={form.motivation}
           onChange={e=>
             setForm({...form,motivation:e.target.value})

@@ -1,6 +1,5 @@
 "use client";
 
-import {useState} from "react";
 import {PersonalEnrollmentRequest} from "@/features/enroll/types/course";
 
 type Props={
@@ -112,7 +111,7 @@ export default function PersonalStep({
         />
 
         <textarea
-          placeholder="수강 동기 (선택/500자 이내)"
+          placeholder="수강 동기 (선택/300자 이내)"
           value={form.motivation}
           onChange={e=>
             setForm({

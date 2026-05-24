@@ -115,9 +115,16 @@ export default function Page() {
                   setType("group");
                   setStep("group");
                 }}
-                className="flex-1 border rounded-xl"
+                className="flex-1 border border-blue-600 text-blue-600 rounded-xl"
               >
                 단체 신청
+              </button>
+
+              <button
+                onClick={()=>router.push("/")}
+                className="flex-1 border rounded-xl"
+              >
+                프로그램 목록
               </button>
 
             </div>
@@ -171,26 +178,55 @@ export default function Page() {
         )}
 
         {step==="done"&&(
-          <div className="bg-white p-8 rounded-2xl shadow border">
+          <div className="min-h-screen bg-slate-50 p-8 flex items-center justify-center">
 
-            <h1 className="text-2xl font-bold mb-6">
-              신청 완료
-            </h1>
+            <div className="w-full max-w-2xl bg-white rounded-2xl shadow border p-8">
 
-            <p>신청 번호: {result?.enrollmentId}</p>
-            <p>강의: {course.title}</p>
-            <p>이름: {formData.name}</p>
+              <h1 className="text-2xl font-bold mb-6 text-center">
+                🎉 신청이 완료되었습니다
+              </h1>
 
-            {type==="group"&&(
-              <p>단체명: {formData.groupName}</p>
-            )}
+              <div className="space-y-3 text-gray-700">
 
-            <button
-              onClick={()=>router.push("/")}
-              className="mt-4 bg-blue-600 text-white p-3 rounded-xl"
-            >
-              홈으로 가기
-            </button>
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-500">신청 번호</span>
+                  <span className="font-medium">{result?.enrollmentId}</span>
+                </div>
+
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-500">프로그램</span>
+                  <span className="font-medium">{course.title}</span>
+                </div>
+
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-500">수강 가능일</span>
+                  <span className="font-medium">
+                    {course.startDate} ~ {course.endDate}
+                  </span>
+                </div>
+
+                <div className="flex justify-between border-b pb-2">
+                  <span className="text-gray-500">이름</span>
+                  <span className="font-medium">{formData.name}</span>
+                </div>
+
+                {type==="group"&&(
+                  <div className="flex justify-between border-b pb-2">
+                    <span className="text-gray-500">단체명</span>
+                    <span className="font-medium">{formData.groupName}</span>
+                  </div>
+                )}
+
+              </div>
+
+              <button
+                onClick={()=>router.push("/")}
+                className="w-full mt-8 bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition"
+              >
+                홈으로 가기
+              </button>
+
+            </div>
 
           </div>
         )}
