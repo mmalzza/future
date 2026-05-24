@@ -33,6 +33,28 @@ export default function Page() {
     "apply"|"personal"|"group"|"complete"|"done"
   >("apply");
 
+  const steps = ["개인/단체 선택", "신청", "확인", "완료"];
+  const currentStep=
+    step==="apply"?0:
+    step==="personal"||step==="group"?1:
+    step==="complete"?2:3;
+
+  const goStep=(idx:number)=>{
+
+    if(idx>currentStep) return;
+
+    if(idx===0) setStep("apply");
+
+    if(idx===1)
+      setStep(type);
+
+    if(idx===2)
+      setStep("complete");
+
+    if(idx===3)
+      setStep("done");
+  };
+
   const [type,setType]=useState<
     "personal"|"group"
   >("personal");
@@ -49,6 +71,35 @@ export default function Page() {
     <main className="min-h-screen bg-slate-50 p-8">
 
       <div className="max-w-4xl mx-auto">
+
+        <div className="flex gap-3 mb-6">
+          {steps.map((label, idx) => (
+            <button
+              key={label}
+              onClick={()=>goStep(idx)}
+              className={`flex items-center gap-2
+                ${idx>currentStep
+                  ?"cursor-not-allowed opacity-50"
+                  :"cursor-pointer"}
+              `}
+            >
+
+              <div
+                className={`w-7 h-7 rounded-full flex items-center justify-center text-sm
+                ${currentStep >= idx ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-500"}`}
+              >
+                {idx + 1}
+              </div>
+
+              <span
+                className={currentStep === idx ? "text-blue-600 font-medium" : "text-gray-400"}
+              >
+                {label}
+              </span>
+
+              </button>
+          ))}
+        </div>
 
         {step==="apply"&&(
 
