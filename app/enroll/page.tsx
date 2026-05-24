@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSearchParams, useRouter,} from "next/navigation";
 
 import {mockCourses} from "@/features/enroll/mocks/courses";
@@ -58,6 +58,20 @@ export default function Page() {
   const [type,setType]=useState<
     "personal"|"group"
   >("personal");
+
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (step === "apply" || step === "done") return;
+
+      e.preventDefault();
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, [step]);
 
   const course=
     mockCourses.courses.find(
@@ -209,8 +223,6 @@ export default function Page() {
           />
 
         )}
-
-        
 
         {step==="complete"&&(
 

@@ -1,36 +1,129 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 다단계 수강 신청 폼
 
-## Getting Started
+## 프로젝트 개요
 
-First, run the development server:
+이 프로젝트는 온라인 교육 플랫폼의 프로그램 신청 기능을 구현한 웹 애플리케이션입니다.
+사용자는 프로그램 목록에서 강의를 선택하고, 개인 또는 단체 신청을 통해 신청을 완료할 수 있습니다.
+
+각 단계는 상태 기반(step-based) UI로 구성되어 있으며, 입력 데이터는 단계 간 공유됩니다.
+
+## 기술 스택
+
+- TypeScript
+- React
+- Next.js
+
+## 사용자 흐름
+
+### 1. 프로그램 선택
+프로그램 목록에서 카테고리별로 필터링하거나 검색하여 원하는 프로그램을 찾을 수 있습니다. 
+
+각 프로그램의 정보가 표시되고 신청 버튼을 클릭하면 해당 프로그램의 신청 페이지로 이동합니다.
+
+### 2. 프로그램 신청 및 정보 입력
+
+선택한 프로그램의 상세 정보가 표시되며 **개인 신청** 또는 **단체 신청**을 선택할 수 있습니다.
+
+#### ✔ 개인 신청
+- 이름
+- 이메일
+- 전화번호
+- 수강 동기
+
+입력 후 유효성 검증을 통과하면 확인 페이지로 이동합니다.
+
+#### ✔ 단체 신청
+- 개인 정보 (이름, 이메일, 전화번호)
+- 단체명
+- 신청 인원
+- 참가자 명단
+- 담당자 연락처
+
+입력 후 유효성 검증을 통과하면 확인 페이지로 이동합니다.
+
+---
+
+### 3. 신청 내용 확인 및 완료
+
+신청 확인 페이지에서 강의 정보와 신청자 정보를 확인할 수 있습니다
+
+사용자는 섹션별 수정이 가능하며 약관 동의 후 제출할 수 있습니다.
+
+제출 성공 시 **신청 완료 페이지**로 이동하며 다음 정보를 확인할 수 있습니다:
+
+- 신청 번호
+- 신청 정보 요약
+- 홈으로 이동
+
+## 실행 방법
 
 ```bash
+# 패키지 설치
+npm install
+
+# 개발 서버 실행
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 브라우저 접속
+http://localhost:3000
 ```
+## 🧩 Mock 데이터 / 서버 구성 방법
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Mock 데이터 위치  
+  `/features/enroll/mocks/courses.ts`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- API 구조  
+  `/app/api/enroll/route.ts`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 요구사항 해석
 
-To learn more about Next.js, take a look at the following resources:
+- 개인/단체 신청은 동일 플로우 내 타입 분기 구조로 구현
+- 단계 이동은 URL이 아닌 state 기반 관리
+- 입력 데이터는 React state를 통해 유지하며 필요 시 localStorage로 처리
+- 확인 페이지는 최종 제출 전 정보 검토 역할로 구성
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 가정
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- 로그인 및 결제 기능 없음
+- 서버는 실제 DB가 아닌 Mock API 기반으로 구성
 
-## Deploy on Vercel
+## 설계 결정과 이유
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 1) Step 기반 상태 관리 선택
+URL 기반 대신 `useState(step)`을 사용하여 단계별 UI 제어를 단순화하였습니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 2) formData 단일 객체 구조
+개인/단체 입력 데이터를 하나의 `formData`로 통합하여 조건부 렌더링으로 처리했습니다.
+
+### 3) 컴포넌트 분리 구조
+각 단계(`PersonalStep`, `GroupStep`, `CompleteStep`)를 독립 컴포넌트로 분리하여 유지보수성과 재사용성을 높였습니다.
+
+### 4) 상태 관리 방식
+`step`, `type`, `formData`를 페이지 단위 state에서 관리하고 props로 전달하여 데이터 흐름을 단순화하였습니다.
+
+### 5) Mock API 사용
+실제 백엔드 없이도 전체 플로우를 테스트할 수 있도록 Mock API를 활용하였습니다.
+
+## 미구현
+
+- 실제 DB 연동
+- 사용자 로그인 및 인증 기능
+- 결제 시스템 연동
+- 서버 기반 정원 제한 및 중복 신청 검증 로직
+
+## 제약사항
+
+- 브라우저 새로고침 시 일부 상태 초기화 가능
+- 다중 탭 간 상태 동기화 미지원
+
+## AI 활용 범위
+
+이 프로젝트는 개발 과정에서 AI를 활용하여 다음 영역을 보완 및 개선하였습니다:
+
+- 폼 상태 구조 설계 (formData 구조 및 단계별 상태 관리)
+- 입력 유효성 검증 로직 개선
+- API 응답 구조 설계 (성공/에러 코드 기반 구조)
+- UI/UX 개선 (Step Indicator, 단계 이동 흐름)
+- 컴포넌트 구조 리팩토링 (Step 기반 구조 분리 및 상태 전달 방식)
